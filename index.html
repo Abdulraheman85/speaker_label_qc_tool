@@ -593,7 +593,7 @@
         </label>
         <div id="durationInputs" class="sub-inputs" style="display: none;">
           Minimum Duration: 
-          <input type="number" id="minDuration" placeholder="10" min="0" step="0.1" style="width: 80px;"> 
+          <input type="number" id="minDuration" placeholder="e.g. 10" min="0" step="0.1" style="width: 80px;"> 
           sec
         </div>
       </div>
@@ -1078,7 +1078,7 @@
 
         if (removeTranscription || !anyChecked) {
           const content = cleanedLines.join("\n");
-          createOutputBlock("Generated Speaker File", content, "_cleaned", false, ".spk.txt");
+          createOutputBlock("Generated Speaker File", content, "", false, ".spk.txt");
         }
 
         if (checkErrors) {
