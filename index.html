@@ -1050,12 +1050,15 @@
                 errorsList.push(`${startTime}\t${endTime}\tUnknown speaker [${startTime}, ${endTime}] ${originalSpeaker}`);
               }
 
-              if (lastSpeakerSegment[speaker] && startNum < lastSpeakerSegment[speaker].end) {
-                errorsList.push(`${startTime}\t${endTime}\tOverlap ${speaker}[${startTime}, ${endTime}]`);
-              }
+              // Sirf tabhi overlap check karega jab speaker SA na ho (yani S1 ya S2 ho)
+              if (speaker !== "SA") {
+                if (lastSpeakerSegment[speaker] && startNum < lastSpeakerSegment[speaker].end) {
+                  errorsList.push(`${startTime}\t${endTime}\tOverlap ${speaker}[${startTime}, ${endTime}]`);
+                }
 
-              if (!lastSpeakerSegment[speaker] || endNum > lastSpeakerSegment[speaker].end) {
-                lastSpeakerSegment[speaker] = { start: startTime, end: endNum };
+                if (!lastSpeakerSegment[speaker] || endNum > lastSpeakerSegment[speaker].end) {
+                  lastSpeakerSegment[speaker] = { start: startTime, end: endNum };
+                }
               }
             }
 
@@ -1081,7 +1084,7 @@
         if (checkErrors) {
           const content = errorsList.length > 0 
             ? errorsList.join("\n") 
-            : "--- NO LABELING ERRORS FOUND ---";
+            : "--- NO S1/S2 OVERLAPS, MISSING OR UNKNOWN LABELS FOUND ---";
           createOutputBlock("Check Labeling Errors (Overlaps & Unknowns)", content, "_errors", true);
         }
 
