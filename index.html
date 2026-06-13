@@ -412,7 +412,7 @@
     .action-btn.copy-btn:hover {
       background: #6d28d9;
       transform: translateY(-1px);
-      current-color: #fff;
+      color: #fff;
     }
 
     .action-btn.save-btn {
@@ -1088,6 +1088,10 @@
               return;
             }
 
+            const startNum = parseFloat(startTime);
+            const endNum = parseFloat(endTime);
+            const duration = endNum - startNum;
+
             let rawSpeaker = parts.length > 2 ? parts[2] : "";
 
             rawSpeaker = rawSpeaker.replace(/[<>:]/g, "");
@@ -1096,11 +1100,18 @@
 
             let originalSpeaker = rawSpeaker; 
             
-            if (!originalSpeaker) {
+            const missingTags = ["UNCLEAR", "FP", "NC", "ABUSIVE"];
+
+            if (!originalSpeaker || missingTags.includes(originalSpeaker)) {
               if (checkErrors) {
                 errorsList.push(`${startTime}\t${endTime}\tMissing speaker name`);
               }
               
+              if (checkDuration && duration >= validMinDuration) {
+                let displaySpk = originalSpeaker ? originalSpeaker + " " : "";
+                durationList.push(`${startTime}\t${endTime}\t${displaySpk}(Duration: ${duration.toFixed(3)}s)`);
+              }
+
               if (removeTranscription || (!removeTranscription && !checkErrors && !checkDuration)) {
                 cleanedLines.push(startTime + "\t" + endTime + "\t");
               } else {
@@ -1117,10 +1128,6 @@
             } else if (speaker.startsWith("SA")) {
               speaker = "SA";
             }
-
-            const startNum = parseFloat(startTime);
-            const endNum = parseFloat(endTime);
-            const duration = endNum - startNum;
 
             if (checkErrors) {
               if (!validSpeakers.includes(originalSpeaker)) {
@@ -1139,7 +1146,7 @@
             }
 
             if (checkDuration && duration >= validMinDuration) {
-              durationList.push(`[${startTime} to ${endTime}] ${speaker} (Duration: ${duration.toFixed(3)}s)`);
+              durationList.push(`${startTime}\t${endTime}\t${speaker} (Duration: ${duration.toFixed(3)}s)`);
             }
 
             if (removeTranscription || (!removeTranscription && !checkErrors && !checkDuration)) {
