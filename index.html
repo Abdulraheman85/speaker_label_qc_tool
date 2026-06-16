@@ -78,7 +78,7 @@
     }
 
     .drop-zone {
-      margin: 15px 0;
+      margin: 15px 0 0 0;
       padding: 40px 20px;
       border: 2px dashed #a5b4fc;
       border-radius: var(--radius-md);
@@ -1094,7 +1094,11 @@
 
             let rawSpeaker = parts.length > 2 ? parts[2] : "";
 
-            rawSpeaker = rawSpeaker.replace(/[<>:]/g, "");
+            if (rawSpeaker.includes(":")) {
+              rawSpeaker = rawSpeaker.split(":")[0];
+            }
+
+            rawSpeaker = rawSpeaker.replace(/[<>]/g, "");
             rawSpeaker = rawSpeaker.replace(/[^A-Za-z0-9_]/g, "");
             rawSpeaker = rawSpeaker.toUpperCase();
 
